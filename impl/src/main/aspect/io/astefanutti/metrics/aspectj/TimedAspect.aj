@@ -24,8 +24,16 @@ final aspect TimedAspect {
     pointcut timed(Profiled object) : execution(@Timed !static * (@Metrics Profiled+).*(..)) && this(object);
 
     Object around(Profiled object) : timed(object) {
+        System.out.println("#################");
+        System.out.println("thisJoinPoint = " + thisJoinPoint);
+        System.out.println("object = " + object);
         String methodSignature = ((MethodSignature) thisJoinPointStaticPart.getSignature()).getMethod().toString();
+        System.out.println("methodSignature = " + methodSignature);
+        System.out.println("object.timers = " + object.timers);
+        System.out.println("object.timers.get(methodSignature) = " + object.timers.get(methodSignature));
+        System.out.println("object.timers.get(methodSignature).getMetric() = " + object.timers.get(methodSignature).getMetric());
         Timer timer = object.timers.get(methodSignature).getMetric();
+        System.out.println("timer = " + timer);
         Timer.Context context = timer.time();
         try {
             return proceed(object);
